@@ -1,13 +1,17 @@
 require("dotenv").config();
 const express = require("express");
+const multerconfig = require("./config/multerconfig");
+const upload = multerconfig;
 const app = express();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("./models/user");
 const postModel = require("./models/post");
 const cookieParser = require("cookie-parser");
+const user = require("./models/user");
 const port = 3000;
 app.use(express.json());
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(cookieParser());
@@ -44,7 +48,16 @@ app.post("/register", async (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login");
 });
+app.get("/profile/upload", (req, res) => {
+  res.render("profileupload");
+});
 
+app.post("/upload", isLoggedIn, upload.single("image"), async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.profilepic = req.file.filename;
+  await user.save();
+  res.redirect("/profile");
+});
 app.post("/login", async (req, res) => {
   let { email, password } = req.body;
   let user = await userModel.findOne({ email });
