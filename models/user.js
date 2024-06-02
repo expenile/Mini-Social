@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 mongoose
-  .connect("mongodb://localhost:27017/miniAssociation")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Mongo Connection Open");
   })
