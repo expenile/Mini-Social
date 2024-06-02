@@ -9,7 +9,7 @@ const userModel = require("./models/user");
 const postModel = require("./models/post");
 const cookieParser = require("cookie-parser");
 const user = require("./models/user");
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
